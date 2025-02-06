@@ -7,35 +7,90 @@ import (
 )
 
 func TestWeightRoundRobin(t *testing.T) {
-	servers := []*Server{
+	cases := []struct {
+		name    string
+		servers []*Server
+		expect  []string
+	}{
 		{
-			IP:     "a",
-			Weight: 1,
+			name:    "empty",
+			servers: []*Server{},
+			expect:  []string(nil),
 		},
+		// a(1) b(2) c(5), gcd = 1
+		// curent weight 5, pick c
+		// curent weight 4, pick c
+		// curent weight 3, pick c
+		// curent weight 2, pick b, c
+		// curent weight 1, pick a, b, c
 		{
-			IP:     "b",
-			Weight: 2,
+			name: "a=1, b=2, c=5",
+			servers: []*Server{
+				{
+					IP:     "a",
+					Weight: 1,
+				},
+				{
+					IP:     "b",
+					Weight: 2,
+				},
+				{
+					IP:     "c",
+					Weight: 5,
+				},
+			},
+			expect: []string{"c", "c", "c", "b", "c", "a", "b", "c"},
 		},
+
+		// a(2) b(2) c(4), gcd = 2
+		// curent weight 4, pick c
+		// curent weight 2, pick a, b, c
+		// curent weight 0 -> 4, pick c
+		// curent weight 2, pick a, b, c
 		{
-			IP:     "c",
-			Weight: 5,
+			name: "a=2, b=2, c=4",
+			servers: []*Server{
+				{
+					IP:     "a",
+					Weight: 2,
+				},
+				{
+					IP:     "b",
+					Weight: 2,
+				},
+				{
+					IP:     "c",
+					Weight: 4,
+				},
+			},
+			expect: []string{"c", "a", "b", "c", "c", "a", "b", "c"},
 		},
 	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			total := 0
+			for _, server := range c.servers {
+				total += server.Weight
+			}
+			// at least run once when total is 0
+			if total == 0 {
+				total = len(c.servers)
 
-	var result []string
-	picker := NewWeightRoundRobinPicker(servers)
-	for i := 0; i < 8; i++ {
-		result = append(result, picker.Next().IP)
+				if total == 0 {
+					total = 1
+				}
+			}
+
+			var result []string
+			picker := NewWeightRoundRobinPicker(c.servers)
+			for i := 0; i < total; i++ {
+				picked := picker.Next()
+				if picked != nil {
+					result = append(result, picked.IP)
+				}
+			}
+
+			assert.Equal(t, c.expect, result)
+		})
 	}
-
-	// a b c (current, index, next_index)
-	// 1 2 5(5, 2, 0) // c
-	// 1 2 5(4, 2, 0) // c
-	// 1 2 5(3, 2, 0) // c
-	// 1 2 5(2, 1, 2) // b
-	// 1 2 5(2, 2, 0) // c
-	// 1 2 5(1, 0, 1) // a
-	// 1 2 5(1, 1, 2) // b
-	// 1 2 5(1, 2, 0) // c
-	assert.Equal(t, result, []string{"c", "c", "c", "b", "c", "a", "b", "c"})
 }
