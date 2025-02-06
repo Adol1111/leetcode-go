@@ -37,8 +37,8 @@ func RegisterPickerProvider(t PickerType, provider PickerProvider) {
 
 func NewPicker(t PickerType, servers []*Server) Picker {
 	pickerProvider, ok := pickerProviderRegistry[t]
-	if !ok {
-		return nil
+	if ok {
+		return pickerProvider.NewPicker(servers)
 	}
-	return pickerProvider.NewPicker(servers)
+	return NewWeightRoundRobinPicker(servers)
 }

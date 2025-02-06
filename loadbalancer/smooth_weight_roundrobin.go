@@ -1,8 +1,9 @@
 package loadbalancer
 
 type SmoothWeightRoundRobinPicker struct {
-	servers []*Server
-	index   int
+	servers     []*Server
+	index       int
+	totalWeight int
 }
 
 func (p *SmoothWeightRoundRobinPicker) Next() *Server {
@@ -21,21 +22,20 @@ func (p *SmoothWeightRoundRobinPicker) Next() *Server {
 	}
 
 	if pickedServer != nil {
-		for _, server := range p.servers {
-			pickedServer.currentWeight -= server.Weight
-		}
+		pickedServer.currentWeight -= p.totalWeight
 	}
 	return pickedServer
 }
 
-func (p *SmoothWeightRoundRobinPicker) Name() string {
-	return "smooth_weight_round_robin"
-}
-
 func NewSmoothWeightRoundRobinPicker(servers []*Server) Picker {
+	totalWeight := 0
+	for _, server := range servers {
+		totalWeight += server.Weight
+	}
 	return &SmoothWeightRoundRobinPicker{
-		servers: servers,
-		index:   0,
+		servers:     servers,
+		index:       0,
+		totalWeight: totalWeight,
 	}
 }
 
