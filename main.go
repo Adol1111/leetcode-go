@@ -7,6 +7,22 @@ import (
 
 func main() {
 	// result := solutions.Trap([]int{4, 2, 0, 3, 2, 5})
-	result := solutions.Insert([][]int{{1, 3}, {6, 9}}, []int{2, 5})
+
+	l1 := &solutions.ListNode{
+		Val: 1,
+		Next: &solutions.ListNode{
+			Val: 2,
+			Next: &solutions.ListNode{
+				Val: 3,
+				Next: &solutions.ListNode{
+					Val: 4,
+					Next: &solutions.ListNode{
+						Val: 5,
+					},
+				},
+			},
+		},
+	}
+	result := solutions.ReverseKGroup(l1, 2)
 	fmt.Printf("result=%v", result)
 }
