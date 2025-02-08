@@ -1,6 +1,6 @@
 package solutions
 
-func setZeroes(matrix [][]int) {
+func SetZeroes(matrix [][]int) {
 	rowSize, colSize := len(matrix), len(matrix[0])
 
 	colFlag := false

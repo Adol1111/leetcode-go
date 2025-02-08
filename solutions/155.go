@@ -14,27 +14,27 @@ func MinStackConstructor() MinStack {
 	}
 }
 
-func (this *MinStack) Push(val int) {
-	this.data = append(this.data, val)
-	top := this.min[len(this.min)-1]
-	this.min = append(this.min, min(top, val))
+func (s *MinStack) Push(val int) {
+	s.data = append(s.data, val)
+	top := s.min[len(s.min)-1]
+	s.min = append(s.min, min(top, val))
 }
 
-func (this *MinStack) Pop() {
-	this.data = this.data[:len(this.data)-1]
-	this.min = this.min[:len(this.min)-1]
+func (s *MinStack) Pop() {
+	s.data = s.data[:len(s.data)-1]
+	s.min = s.min[:len(s.min)-1]
 }
 
-func (this *MinStack) Top() int {
-	if len(this.data) == 0 {
+func (s *MinStack) Top() int {
+	if len(s.data) == 0 {
 		return 0
 	}
-	return this.data[len(this.data)-1]
+	return s.data[len(s.data)-1]
 }
 
-func (this *MinStack) GetMin() int {
-	if len(this.min) == 0 {
+func (s *MinStack) GetMin() int {
+	if len(s.min) == 0 {
 		return 0
 	}
-	return this.min[len(this.min)-1]
+	return s.min[len(s.min)-1]
 }

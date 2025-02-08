@@ -22,71 +22,71 @@ func LRUCacheConstructor(capacity int) LRUCache {
 	}
 }
 
-func (this *LRUCache) moveToHead(node *node) {
-	if node == this.head {
+func (c *LRUCache) moveToHead(node *node) {
+	if node == c.head {
 		return
 	}
 
-	if node == this.tail {
-		this.tail = node.prev
-		this.tail.next = nil
+	if node == c.tail {
+		c.tail = node.prev
+		c.tail.next = nil
 	} else {
 		node.prev.next = node.next
 		node.next.prev = node.prev
 	}
 
-	node.next = this.head
+	node.next = c.head
 	node.prev = nil
-	this.head.prev = node
-	this.head = node
+	c.head.prev = node
+	c.head = node
 }
 
-func (this *LRUCache) addToHead(node *node) {
-	if this.head == nil {
-		this.head = node
-		this.tail = node
+func (c *LRUCache) addToHead(node *node) {
+	if c.head == nil {
+		c.head = node
+		c.tail = node
 	} else {
-		node.next = this.head
-		this.head.prev = node
-		this.head = node
+		node.next = c.head
+		c.head.prev = node
+		c.head = node
 	}
 }
 
-func (this *LRUCache) removeTail() *node {
-	node := this.tail
-	this.tail = this.tail.prev
-	if this.tail != nil {
-		this.tail.next = nil
+func (c *LRUCache) removeTail() *node {
+	node := c.tail
+	c.tail = c.tail.prev
+	if c.tail != nil {
+		c.tail.next = nil
 	}
 	return node
 }
 
-func (this *LRUCache) Get(key int) int {
-	node, ok := this.cache[key]
+func (c *LRUCache) Get(key int) int {
+	node, ok := c.cache[key]
 	if !ok {
 		return -1
 	}
-	this.moveToHead(node)
+	c.moveToHead(node)
 	return node.value
 }
 
-func (this *LRUCache) Put(key int, value int) {
-	if _, ok := this.cache[key]; !ok {
+func (c *LRUCache) Put(key int, value int) {
+	if _, ok := c.cache[key]; !ok {
 		node := &node{
 			key:   key,
 			value: value,
 		}
-		this.cache[key] = node
-		this.addToHead(node)
-		this.size++
-		if this.size > this.capacity {
-			removed := this.removeTail()
-			delete(this.cache, removed.key)
-			this.size--
+		c.cache[key] = node
+		c.addToHead(node)
+		c.size++
+		if c.size > c.capacity {
+			removed := c.removeTail()
+			delete(c.cache, removed.key)
+			c.size--
 		}
 	} else {
-		node := this.cache[key]
+		node := c.cache[key]
 		node.value = value
-		this.moveToHead(node)
+		c.moveToHead(node)
 	}
 }
