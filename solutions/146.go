@@ -55,7 +55,9 @@ func (c *LRUCache) addToHead(node *node) {
 func (c *LRUCache) removeTail() *node {
 	node := c.tail
 	c.tail = c.tail.prev
-	if c.tail != nil {
+	if c.tail == nil {
+		c.head = nil
+	} else {
 		c.tail.next = nil
 	}
 	return node

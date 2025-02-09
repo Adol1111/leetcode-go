@@ -1,14 +1,14 @@
 package solutions
 
 func reverseK(head *ListNode, k int) *ListNode {
-	first := head
+	prev := head
 	for i := 1; i < k; i++ {
-		node := head.Next
-		head.Next = node.Next
-		node.Next = first
-		first = node
+		current := prev.Next
+		prev.Next = current.Next
+		current.Next = head
+		head = current
 	}
-	return first
+	return head
 }
 
 func ReverseKGroup(head *ListNode, k int) *ListNode {

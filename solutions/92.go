@@ -12,19 +12,11 @@ func ReverseBetween(head *ListNode, left int, right int) *ListNode {
 		node = node.Next
 	}
 
-	leftNode := prev
-	prev = node
-	newHead := node
-	for i := left + 1; i <= right; i++ {
-		node := prev.Next
-		prev.Next = node.Next
-		node.Next = newHead
-		newHead = node
-	}
-	if leftNode != nil {
-		leftNode.Next = newHead
+	node = reverseK(node, right-left+1)
+	if prev != nil {
+		prev.Next = node
 	} else {
-		head = newHead
+		head = node
 	}
 
 	return head

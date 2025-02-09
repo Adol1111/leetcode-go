@@ -8,21 +8,12 @@ import (
 func main() {
 	// result := solutions.Trap([]int{4, 2, 0, 3, 2, 5})
 
-	l1 := &solutions.ListNode{
-		Val: 1,
-		Next: &solutions.ListNode{
-			Val: 2,
-			Next: &solutions.ListNode{
-				Val: 3,
-				Next: &solutions.ListNode{
-					Val: 4,
-					Next: &solutions.ListNode{
-						Val: 5,
-					},
-				},
-			},
+	l1 := &solutions.TreeNode{
+		Val: 2,
+		Left: &solutions.TreeNode{
+			Val: -1,
 		},
 	}
-	result := solutions.ReverseKGroup(l1, 2)
+	result := solutions.MaxPathSum(l1)
 	fmt.Printf("result=%v", result)
 }
