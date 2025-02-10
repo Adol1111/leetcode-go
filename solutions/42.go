@@ -5,6 +5,9 @@ func Trap(height []int) int {
 	lmax := make([]int, length)
 	rmax := make([]int, length)
 
+	// 最小值为，当前位置左右两边最大值中的较小的一个（木桶原理）- 当前高度，min(leftMax[i],rightMax[i])−height[i]
+	// 先计算左边的最大值，再计算右边的最大值
+
 	lmax[0] = height[0]
 	for i := 1; i < length; i++ {
 		lmax[i] = max(lmax[i-1], height[i])

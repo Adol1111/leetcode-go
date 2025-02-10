@@ -20,6 +20,9 @@ func IntToRoman(num int) string {
 		{1, "I"},
 	}
 
+	// 先处理大的数，再处理小的数
+	// 循环一直减，直到num小于value，然后继续下一个value
+	// 如果减到0，则直接返回
 	ans := ""
 	for _, v := range valueSymbols {
 		for num >= v.value {

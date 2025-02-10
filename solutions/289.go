@@ -10,6 +10,7 @@ func GameOfLife(board [][]int) {
 	for i := 0; i < len(board); i++ {
 		for j := 0; j < len(board[0]); j++ {
 			liveCount := 0
+			// 遍历周围一圈，统计活着的数量
 			for k := i - 1; k <= i+1; k++ {
 				for l := j - 1; l <= j+1; l++ {
 					if k < 0 || k >= len(board) || l < 0 || l >= len(board[0]) || (k == i && l == j) {

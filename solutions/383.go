@@ -2,6 +2,7 @@ package solutions
 
 func CanConstruct(ransomNote string, magazine string) bool {
 	arr := [26]int{}
+	// 统计ransomNote的所有字符数
 	for i := 0; i < len(ransomNote); i++ {
 		arr[ransomNote[i]-'a']++
 	}
