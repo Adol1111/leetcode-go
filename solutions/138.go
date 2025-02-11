@@ -1,18 +1,18 @@
 package solutions
 
-type Node struct {
+type RandomNode struct {
 	Val    int
-	Next   *Node
-	Random *Node
+	Next   *RandomNode
+	Random *RandomNode
 }
 
-func CopyRandomList(head *Node) *Node {
+func CopyRandomList(head *RandomNode) *RandomNode {
 	if head == nil {
 		return nil
 	}
 
 	for node := head; node != nil; {
-		newNode := &Node{Val: node.Val, Next: node.Next}
+		newNode := &RandomNode{Val: node.Val, Next: node.Next}
 		node.Next = newNode
 		node = newNode.Next
 	}
