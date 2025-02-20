@@ -108,6 +108,7 @@ func CalcEquation2(equations [][]string, values []float64, queries [][]string) [
 func CalcEquation(equations [][]string, values []float64, queries [][]string) []float64 {
 	m := map[string]int{}
 	id := 0
+	// 把节点名称转为id
 	for _, equation := range equations {
 		a, b := equation[0], equation[1]
 		if _, ok := m[a]; !ok {
@@ -120,18 +121,22 @@ func CalcEquation(equations [][]string, values []float64, queries [][]string) []
 		}
 	}
 
+	// 构建图
 	type edge struct {
 		to     int
 		weight float64
 	}
 
+	// 这里使用id做节点，而不是节点名称
 	graph := make([][]edge, id)
 	for _, equation := range equations {
 		a, b := equation[0], equation[1]
+		// 构建双向图，每个节点都有一个到另一个节点的边 a->b 和 b->a，两者的value是倒数关系
 		graph[m[a]] = append(graph[m[a]], edge{m[b], values[0]})
 		graph[m[b]] = append(graph[m[b]], edge{m[a], 1 / values[0]})
 	}
 
+	// 广度遍历，从start开始，找到end节点，返回从start到end的权重，即所有经过的边的权重相乘
 	bfs := func(start, end int) float64 {
 		ratios := make([]float64, len(graph))
 		ratios[start] = 1
@@ -143,6 +148,7 @@ func CalcEquation(equations [][]string, values []float64, queries [][]string) []
 				return ratios[v]
 			}
 			for _, e := range graph[v] {
+				// 如果已经计算过到start的权重值，则忽略, 否则收集到queue中
 				if w := e.to; ratios[w] == 0 {
 					// ratios[w] 表示从start到w的权重 = 从start到v的权重 * v到w的权重
 					ratios[w] = ratios[v] * e.weight
@@ -158,6 +164,7 @@ func CalcEquation(equations [][]string, values []float64, queries [][]string) []
 		a, b := query[0], query[1]
 		ida, ok1 := m[a]
 		idb, ok2 := m[b]
+		// 如果任意节点此前没有出现过，说明无法计算
 		if !ok1 || !ok2 {
 			result = append(result, -1.0)
 		} else {

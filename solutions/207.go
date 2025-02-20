@@ -1,10 +1,12 @@
 package solutions
 
+// 等价于判断是否存在循环图
 func CanFinish(numCourses int, prerequisites [][]int) bool {
 	// 构建邻接表
 	adjacency := make([][]int, numCourses)
 	for _, prerequisite := range prerequisites {
-		adjacency[prerequisite[1]] = append(adjacency[prerequisite[1]], prerequisite[0])
+		// 表示 课程[0] 依赖 课程[1]
+		adjacency[prerequisite[0]] = append(adjacency[prerequisite[0]], prerequisite[1])
 	}
 	// 记录节点状态
 	// 0 未访问
@@ -27,6 +29,7 @@ func CanFinish(numCourses int, prerequisites [][]int) bool {
 				return false
 			}
 		}
+		// 所有依赖的节点都已遍历，则设置为已访问
 		status[node] = 2
 		return true
 	}

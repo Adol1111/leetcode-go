@@ -1,5 +1,6 @@
 package solutions
 
+// 参考433，两题的思路完全相同
 func LadderLength(beginWord string, endWord string, wordList []string) int {
 	if beginWord == endWord {
 		return 0
@@ -27,6 +28,7 @@ func LadderLength(beginWord string, endWord string, wordList []string) int {
 
 	visited := make([]bool, len(wordList))
 	queue := []int{}
+	// 查询beginWord的所有邻接节点，作为初始节点
 	for i, s := range wordList {
 		if isAdjacent(beginWord, s) {
 			queue = append(queue, i)

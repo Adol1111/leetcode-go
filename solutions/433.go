@@ -17,24 +17,31 @@ func MinMutation(startGene string, endGene string, bank []string) int {
 
 	adjacency := make([][]int, len(bank))
 	endIndex := -1
+	// 整理bank，找到所有的邻接节点，存放在邻接表中
 	for i := 0; i < len(bank); i++ {
 		if bank[i] == endGene {
 			endIndex = i
 		}
 
+		// 从i+1开始，前面的节点已经遍历过了，可以跳过
 		for j := i + 1; j < len(bank); j++ {
+			// 判断是否是邻接节点
 			if isAdjacent(bank[i], bank[j]) {
+				// i和j互为邻接节点
 				adjacency[i] = append(adjacency[i], j)
 				adjacency[j] = append(adjacency[j], i)
 			}
 		}
 	}
+
+	// 如果bank中不存在endGene，则无法转换，返回-1
 	if endIndex == -1 {
 		return -1
 	}
 
 	visited := make([]bool, len(bank))
 	queue := []int{}
+	// 寻找startGene的邻接节点, 作为起始点
 	for i, s := range bank {
 		if isAdjacent(startGene, s) {
 			queue = append(queue, i)
@@ -49,14 +56,14 @@ func MinMutation(startGene string, endGene string, bank []string) int {
 			if cur == endIndex {
 				return step
 			}
-			// 获取当前节点的下一个节点，遍历所有下一个节点，如果没有访问过，则加入队列中
+			// 获取邻接节点，如果没有访问过，则加入队列中
+			// 邻接节点会作为下一批的起点
 			for _, next := range adjacency[cur] {
 				if !visited[next] {
 					queue = append(queue, next)
 					visited[next] = true
 				}
 			}
-
 		}
 	}
 	return -1

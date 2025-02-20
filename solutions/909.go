@@ -24,13 +24,14 @@ func SnakesAndLadders(board [][]int) int {
 			if next > n*n { // 超出边界，后续的次数都不会到达终点，所以直接break
 				break
 			}
-			row, col := id2rc(next, n) // 得到下一步的行列
-			if board[row][col] > 0 {   // 存在蛇或梯子
+			row, col := id2rc(next, n) // 把id转为行和列
+			if board[row][col] > 0 {   // 存在蛇或梯子，next需要更新为蛇或梯子的终点
 				next = board[row][col]
 			}
 			if next == n*n { // 到达终点
 				return p.step + 1
 			}
+			// 被访问过，说明出现循环了，可以剔除
 			if !visited[next] {
 				visited[next] = true
 				// 记录新到达的位置，步数+1，每个步骤都会尝试6次，如果已经遍历过，就不需要再遍历了

@@ -7,6 +7,7 @@ func Slove(board [][]byte) {
 	m = len(board)
 	n = len(board[0])
 
+	// 深度优先，把跟边缘相关的O都变成A, 再把剩余的O变成X，把A变回O
 	var dfs func(grid [][]byte, row, col int)
 	dfs = func(grid [][]byte, row, col int) {
 		if row < 0 || row >= m || col < 0 || col >= n || grid[row][col] != 'O' {

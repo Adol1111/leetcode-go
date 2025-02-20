@@ -2,47 +2,46 @@ package solutions
 
 func FindOrder(numCourses int, prerequisites [][]int) []int {
 	var (
-		edges   = make([][]int, numCourses)
+		edges = make([][]int, numCourses)
+		// 状态表，0表示未上课，1表示进行中，2表示已上课完成, 未出现循环依赖
 		visited = make([]int, numCourses)
 		result  []int
 		valid   bool = true
 	)
 
-	var dfs func(int)
-	dfs = func(node int) {
+	// 深度优先，找到一门课就把所有依赖都找出来，并放到结果中
+	var dfs func(int) bool
+	dfs = func(node int) bool {
+		if visited[node] == 1 {
+			return false
+		}
+		if visited[node] == 2 {
+			return true
+		}
 		visited[node] = 1
 
 		for _, nextNode := range edges[node] {
-			if visited[nextNode] == 0 { // 未上课，继续
-				dfs(nextNode)
-				if !valid {
-					return
-				}
-			} else if visited[nextNode] == 1 { // 进行中，说明有环，返回 false
-				valid = false
-				return
+			if !dfs(nextNode) {
+				return false
 			}
 		}
-		visited[node] = 2 // 无任何依赖，可以完成，加入结果集
+		// 所有依赖的课都已完成，标记为已完成
+		visited[node] = 2
 		result = append(result, node)
+		return true
 	}
 
 	for _, info := range prerequisites {
-		edges[info[1]] = append(edges[info[1]], info[0])
+		// 收集依赖关系, 课程[0]依赖课程[1]
+		edges[info[0]] = append(edges[info[0]], info[1])
 	}
 
 	for i := 0; i < numCourses && valid; i++ {
-		if visited[i] == 0 {
-			dfs(i)
+		// 如果不是0 则说明已收集过，不需要重复处理
+		if visited[i] == 0 && !dfs(i) {
+			return []int{}
 		}
 	}
 
-	if !valid {
-		return []int{}
-	}
-
-	for i := 0; i < len(result)/2; i++ {
-		result[i], result[numCourses-i-1] = result[numCourses-i-1], result[i]
-	}
 	return result
 }
